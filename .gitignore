@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Virtual Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Config con credenziali
+config/secrets.yaml
+config/secrets.json
+*.key
+*.pem
+
+# Dati locali
+data/raw/
+data/cache/
+*.csv
+*.parquet
+!data/sample/
+
+# Modelli addestrati (troppo grandi per git)
+models/saved/
+*.h5
+*.pkl
+*.joblib
+*.pt
+*.pth
