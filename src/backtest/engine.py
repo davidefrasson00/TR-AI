@@ -53,6 +53,7 @@ class BacktestEngine:
         slippage_ticks: float = 0.5,
         tick_size: float = 0.1,
         point_value: float = 1.0,
+        partial_close_pct: float = 50.0,
     ):
         self.strategy = strategy
         self.risk_manager = risk_manager
@@ -61,6 +62,7 @@ class BacktestEngine:
         self.slippage_ticks = slippage_ticks
         self.tick_size = tick_size
         self.point_value = point_value
+        self.partial_close_pct = partial_close_pct
 
         self.reset()
 
@@ -203,8 +205,12 @@ class BacktestEngine:
 
             # 2. Take Profit 1 Hit
             if tp1_hit and not pos.is_partially_closed:
-                # Close 50% of the position at TP1
-                partial_size = round(pos.size_contracts * 0.5, 4)
+                if self.partial_close_pct >= 100.0:
+                    self._close_full_trade(pos, exit_price=tp1, exit_time=bar.timestamp, reason="TP1 (100% full exit)")
+                    continue
+
+                # Close partial_close_pct (default 50%) of the position at TP1
+                partial_size = round(pos.size_contracts * (self.partial_close_pct / 100.0), 4)
                 pnl_pts = (tp1 - pos.entry_price) if is_long else (pos.entry_price - tp1)
                 pnl_monetary = partial_size * pnl_pts * self.point_value
 

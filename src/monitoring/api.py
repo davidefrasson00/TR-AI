@@ -21,20 +21,12 @@ from src.core.events import AccountInfo, Position, OrderSide
 from src.core.logger import decision_logger
 from src.data.yfinance_provider import CACHE_DIR
 from src.risk.manager import RiskManager
+from src.bot.telegram_bot import TelegramBot
 
 REPORTS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "reports")
 DASHBOARD_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dashboard")
 
-app = FastAPI(title="TR-AI Monitoring Dashboard", version="1.0.0")
-
-# Enable CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+from contextlib import asynccontextmanager
 
 # Shared in-memory state for live monitoring
 live_state: Dict[str, Any] = {
@@ -67,6 +59,28 @@ live_state: Dict[str, Any] = {
     "strategy_name": "WAM-FVG (Intraday Index Plug-in)",
     "strategy_mode": "PAPER TRADING / DEMO"
 }
+
+# Telegram Bot instance linked with system state
+telegram_bot = TelegramBot(live_state=live_state)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    telegram_bot.start()
+    yield
+    telegram_bot.stop()
+
+
+app = FastAPI(title="TR-AI Monitoring Dashboard", version="1.0.0", lifespan=lifespan)
+
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class KillSwitchRequest(BaseModel):
@@ -177,10 +191,11 @@ def get_candles(symbol: str, limit: int = 150) -> List[Dict[str, Any]]:
 
 
 @app.post("/api/kill-switch")
-def toggle_kill_switch(req: KillSwitchRequest) -> Dict[str, Any]:
+async def toggle_kill_switch(req: KillSwitchRequest) -> Dict[str, Any]:
     live_state["kill_switch_active"] = req.active
     action = "ACTIVATED" if req.active else "DEACTIVATED"
     decision_logger.log_decision("WEB_CONTROL", "ALL", action, req.reason)
+    await telegram_bot.notify_kill_switch(req.active, source="Web Dashboard")
     return {"status": "SUCCESS", "kill_switch_active": live_state["kill_switch_active"]}
 
 

@@ -1,0 +1,122 @@
+[
+  {
+    "buffer_ticks": 1,
+    "tp1_offset_ticks": 2,
+    "min_score": 60.0,
+    "management": "50% Partial + BE",
+    "total_trades": 3,
+    "win_rate_pct": 66.67,
+    "profit_factor": 3.47,
+    "expectancy_r": 2.0,
+    "net_pnl": 24.1,
+    "max_drawdown_pct": 0.98
+  },
+  {
+    "buffer_ticks": 2,
+    "tp1_offset_ticks": 2,
+    "min_score": 60.0,
+    "management": "50% Partial + BE",
+    "total_trades": 3,
+    "win_rate_pct": 66.67,
+    "profit_factor": 3.47,
+    "expectancy_r": 2.0,
+    "net_pnl": 24.1,
+    "max_drawdown_pct": 0.98
+  },
+  {
+    "buffer_ticks": 3,
+    "tp1_offset_ticks": 2,
+    "min_score": 60.0,
+    "management": "50% Partial + BE",
+    "total_trades": 3,
+    "win_rate_pct": 66.67,
+    "profit_factor": 3.47,
+    "expectancy_r": 2.0,
+    "net_pnl": 24.1,
+    "max_drawdown_pct": 0.98
+  },
+  {
+    "buffer_ticks": 5,
+    "tp1_offset_ticks": 2,
+    "min_score": 60.0,
+    "management": "50% Partial + BE",
+    "total_trades": 3,
+    "win_rate_pct": 66.67,
+    "profit_factor": 3.47,
+    "expectancy_r": 1.98,
+    "net_pnl": 24.1,
+    "max_drawdown_pct": 0.98
+  },
+  {
+    "buffer_ticks": 10,
+    "tp1_offset_ticks": 2,
+    "min_score": 60.0,
+    "management": "50% Partial + BE",
+    "total_trades": 3,
+    "win_rate_pct": 66.67,
+    "profit_factor": 3.19,
+    "expectancy_r": 1.8,
+    "net_pnl": 21.78,
+    "max_drawdown_pct": 1.0
+  },
+  {
+    "buffer_ticks": 2,
+    "tp1_offset_ticks": -2,
+    "min_score": 60.0,
+    "management": "50% Partial + BE",
+    "total_trades": 3,
+    "win_rate_pct": 66.67,
+    "profit_factor": 3.44,
+    "expectancy_r": 1.98,
+    "net_pnl": 23.78,
+    "max_drawdown_pct": 0.98
+  },
+  {
+    "buffer_ticks": 2,
+    "tp1_offset_ticks": 0,
+    "min_score": 60.0,
+    "management": "50% Partial + BE",
+    "total_trades": 3,
+    "win_rate_pct": 66.67,
+    "profit_factor": 3.45,
+    "expectancy_r": 1.99,
+    "net_pnl": 23.94,
+    "max_drawdown_pct": 0.98
+  },
+  {
+    "buffer_ticks": 2,
+    "tp1_offset_ticks": 2,
+    "min_score": 60.0,
+    "management": "50% Partial + BE",
+    "total_trades": 3,
+    "win_rate_pct": 66.67,
+    "profit_factor": 3.47,
+    "expectancy_r": 2.0,
+    "net_pnl": 24.1,
+    "max_drawdown_pct": 0.98
+  },
+  {
+    "buffer_ticks": 2,
+    "tp1_offset_ticks": 2,
+    "min_score": 60.0,
+    "management": "50% Partial + BE",
+    "total_trades": 3,
+    "win_rate_pct": 66.67,
+    "profit_factor": 3.47,
+    "expectancy_r": 2.0,
+    "net_pnl": 24.1,
+    "max_drawdown_pct": 0.98
+  },
+  {
+    "buffer_ticks": 2,
+    "tp1_offset_ticks": 2,
+    "min_score": 60.0,
+    "management": "100% Full TP1",
+    "total_trades": 2,
+    "win_rate_pct": 50.0,
+    "profit_factor": 3.9,
+    "expectancy_r": 1.47,
+    "net_pnl": 28.32,
+    "max_drawdown_pct": 0.98
+  }
+]

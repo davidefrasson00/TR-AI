@@ -9,6 +9,30 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ## [Unreleased]
 
 ### Added
+- **Fase S7**: Motore di Forward-Testing e Live Paper Trading (`src/execution/`):
+  - `src/execution/live_runner.py`: `LivePaperRunner` ad anello continuo per streaming e monitoraggio real-time di candele 5m per `US500`, `USTEC`, `DE40`.
+  - Gestione orari di mercato (apertura/chiusura weekend, sessione domenicale futures 18:00 ET / 00:00 CEST, sessione Francoforte e New York).
+  - Gestione simulata di ordini pending limit, penetrazione minima, fill ed esecuzioni conservative SL/TP1 (50% parziale + BE)/TP2.
+  - Sincronizzazione in tempo reale con lo stato memoria `live_state` condiviso con la dashboard web e dispatch immediato di allerte push su Telegram.
+  - Script eseguibile continuo: `scripts/run_live_paper.py`.
+- **Fase S6**: Bot Telegram & Notifiche Push Real-Time (`src/bot/`):
+  - `src/bot/telegram_bot.py`: Client Telegram asincrono ad alta affidabilità basato su `httpx` (zero dipendenze esterne pesanti).
+  - Comandi interattivi supportati:
+    - `/status`: Monitoraggio finanze conto, equity, balance, floating P&L, daily drawdown % vs limite 3%, e slot rischio occupati.
+    - `/positions`: Dettaglio posizioni aperte, prezzi di ingresso, stop loss, take profit e stato break-even.
+    - `/trades`: Ultimi trade eseguiti con relative metriche R e causali di uscita.
+    - `/kill`: **Emergency Kill Switch** bidirezionale (blocca istantaneamente l'invio ordini da chat mobile).
+    - `/resume`: Ripristino operativo autorizzato.
+    - `/help`: Guida rapida e sintassi comandi.
+  - Notifiche automatiche in push: generazione segnali (con esito Risk Manager), trade aperti, TP1 raggiunto (parziale 50% + stop a BE), chiusure, e superamento circuit breaker di drawdown.
+  - Gestione credenziali e sicurezza: token e chat ID configurati via `.env` (file `.env.example` fornito), con fallback automatico in modalità Mock/Simulation quando non configurato.
+  - Suite di test dedicata (`tests/test_telegram_bot.py` e `tests/test_live_runner.py`).
+- **Fase S5**: Extended Sensitivity Backtest (Robustezza & Parametri):
+  - `scripts/run_sensitivity_backtest.py`: Suite di backtest estesa con matrice comparativa salvata in `reports/sensitivity_analysis.json`.
+  - Verifica quantitativa dei parametri:
+    - Stop Loss Buffers [1, 2, 3, 5, 10 tick]: confermato buffer 2 tick come sweet-spot ottimale (Expectancy +2.00R, PF 3.47).
+    - Take Profit Offsets [-2, 0, +2 tick]: confermato offset +2 tick oltre il range per cattura liquidità (Expectancy +2.00R).
+    - Modalità di uscita: confermata superiorità di robustezza ed expectancy della gestione 50% TP1 + Break-Even runner (+2.00R) rispetto all'uscita 100% (+1.47R).
 - **Fase S4**: Web Dashboard di Monitoraggio Glassmorphism:
   - Backend FastAPI (`src/monitoring/api.py`):
     - REST Endpoints: `/api/status`, `/api/positions`, `/api/trades`, `/api/candles/{symbol}`, `/api/kill-switch`.
