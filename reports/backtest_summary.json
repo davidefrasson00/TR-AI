@@ -1,17 +1,17 @@
 {
-  "timestamp": "2026-10-18T15:31:37.773077Z",
+  "timestamp": "2026-10-18T16:24:58.726355Z",
   "initial_capital": 1000.0,
-  "total_trades": 3,
-  "winning_trades": 2,
-  "losing_trades": 1,
-  "breakeven_trades": 0,
-  "win_rate_pct": 66.67,
-  "profit_factor": 3.47,
-  "expectancy_r": 2.0,
-  "average_r": 2.0,
-  "net_pnl": 24.1,
+  "total_trades": 6,
+  "winning_trades": 3,
+  "losing_trades": 2,
+  "breakeven_trades": 1,
+  "win_rate_pct": 50.0,
+  "profit_factor": 2.75,
+  "expectancy_r": 1.48,
+  "average_r": 1.48,
+  "net_pnl": 32.93,
   "max_drawdown_monetary": 9.76,
-  "max_drawdown_pct": 0.98,
+  "max_drawdown_pct": 0.97,
   "max_consecutive_losses": 1,
   "instrument_breakdown": {
     "US500": {
@@ -21,24 +21,30 @@
       "avg_r": 3.4975206611568206
     },
     "USTEC": {
-      "trades": 1.0,
+      "trades": 2.0,
       "win_rate": 0.0,
-      "pnl": -9.759999999999856,
-      "avg_r": -1.0010256410256262
+      "pnl": -18.85799999999945,
+      "avg_r": -1.001062996569143
+    },
+    "DE40": {
+      "trades": 2.0,
+      "win_rate": 50.0,
+      "pnl": 17.928000000000065,
+      "avg_r": 1.958060288335497
     }
   },
   "direction_breakdown": {
     "LONG": {
-      "trades": 3.0,
-      "win_rate": 66.66666666666666,
-      "pnl": 24.095999999999187,
-      "avg_r": 1.9980052270960051
+      "trades": 4.0,
+      "win_rate": 50.0,
+      "pnl": 14.997999999999593,
+      "avg_r": 1.2482288322938389
     },
     "SHORT": {
-      "trades": 0,
-      "win_rate": 0.0,
-      "pnl": 0.0,
-      "avg_r": 0.0
+      "trades": 2.0,
+      "win_rate": 50.0,
+      "pnl": 17.928000000000065,
+      "avg_r": 1.958060288335497
     }
   },
   "score_tier_breakdown": {
@@ -63,7 +69,49 @@
   },
   "trades": [
     {
-      "trade_id": "pos_c189fc8a",
+      "trade_id": "pos_86b600b6",
+      "symbol": "USTEC",
+      "direction": "LONG",
+      "entry_time": "2026-08-27T13:45:00+00:00",
+      "exit_time": "2026-08-27T13:50:00+00:00",
+      "entry_price": 29496.739999999998,
+      "exit_price": 29451.25,
+      "pnl_monetary": -9.1,
+      "r_multiple": -1.0,
+      "exit_reason": "SL",
+      "day_of_week": "Thursday",
+      "entry_hour": 13
+    },
+    {
+      "trade_id": "pos_f97fef57_tp1",
+      "symbol": "DE40",
+      "direction": "SHORT",
+      "entry_time": "2026-10-02T14:00:00+00:00",
+      "exit_time": "2026-10-02T14:05:00+00:00",
+      "entry_price": 25265.7,
+      "exit_price": 25146.18,
+      "pnl_monetary": 17.93,
+      "r_multiple": 3.92,
+      "exit_reason": "TP1 (50% partial)",
+      "day_of_week": "Friday",
+      "entry_hour": 14
+    },
+    {
+      "trade_id": "pos_f97fef57",
+      "symbol": "DE40",
+      "direction": "SHORT",
+      "entry_time": "2026-10-02T14:00:00+00:00",
+      "exit_time": "2026-10-02T14:05:00+00:00",
+      "entry_price": 25265.7,
+      "exit_price": 25265.7,
+      "pnl_monetary": 0.0,
+      "r_multiple": 0.0,
+      "exit_reason": "SL",
+      "day_of_week": "Friday",
+      "entry_hour": 14
+    },
+    {
+      "trade_id": "pos_b8b69e55",
       "symbol": "USTEC",
       "direction": "LONG",
       "entry_time": "2026-10-15T13:40:00+00:00",
@@ -77,7 +125,7 @@
       "entry_hour": 13
     },
     {
-      "trade_id": "pos_3cabd916_tp1",
+      "trade_id": "pos_7bf4211d_tp1",
       "symbol": "US500",
       "direction": "LONG",
       "entry_time": "2026-10-15T13:45:00+00:00",
@@ -91,7 +139,7 @@
       "entry_hour": 13
     },
     {
-      "trade_id": "pos_3cabd916",
+      "trade_id": "pos_7bf4211d",
       "symbol": "US500",
       "direction": "LONG",
       "entry_time": "2026-10-15T13:45:00+00:00",

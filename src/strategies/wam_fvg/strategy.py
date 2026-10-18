@@ -53,8 +53,8 @@ class WamFvgStrategy(BaseStrategy):
         self.spread_multiplier = spread_multiplier
 
         # Primitives
-        self.range_detector = RangeDetector()
-        self.sweep_detector = SweepDetector()
+        self.range_detector = RangeDetector(max_height_atr=3.2)
+        self.sweep_detector = SweepDetector(max_depth_frac=0.60)
         self.displacement_validator = DisplacementValidator(require_mss=True)
         self.fvg_detector = FVGDetector()
         self.fib_calc = FibonacciCalculator()
@@ -65,7 +65,7 @@ class WamFvgStrategy(BaseStrategy):
         self.session_managers: Dict[str, SessionManager] = {
             "US500": SessionManager(US_OPEN_TEMPLATE),
             "USTEC": SessionManager(US_OPEN_TEMPLATE),
-            "DE40": SessionManager(FRANKFURT_OPEN_TEMPLATE),
+            "DE40": SessionManager(US_OPEN_TEMPLATE),
         }
         self.bars_history: Dict[str, List[Bar]] = {}
         self.range_bars_history: Dict[str, List[Bar]] = {}

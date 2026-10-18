@@ -41,7 +41,7 @@ def run_full_backtest(
         strategy_id="wam_fvg",
         buffer_ticks=2,
         tp1_offset_ticks=2,
-        min_score=60.0
+        min_score=75.0
     )
 
     risk_manager = RiskManager(

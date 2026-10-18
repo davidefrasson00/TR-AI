@@ -40,8 +40,15 @@ class TelegramBot:
         live_state: Optional[Dict[str, Any]] = None,
         on_kill_switch: Optional[Callable[[bool, str], None]] = None
     ):
-        self.token = token or os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
-        self.chat_id = chat_id or os.getenv("TELEGRAM_CHAT_ID", "").strip()
+        if token is not None:
+            self.token = token.strip()
+        else:
+            self.token = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
+
+        if chat_id is not None:
+            self.chat_id = chat_id.strip()
+        else:
+            self.chat_id = os.getenv("TELEGRAM_CHAT_ID", "").strip()
         self.live_state = live_state
         self.on_kill_switch = on_kill_switch
 
