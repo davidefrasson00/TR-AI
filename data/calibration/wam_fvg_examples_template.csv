@@ -1,0 +1,4 @@
+date,instrument,direction,range_start,range_end,range_high,range_low,sweep_time,sweep_extreme,entry_time,entry_price,sl_price,tp_price,outcome,r_multiple,notes
+2026-10-14,US500,LONG,06:30,09:30,5875.25,5845.50,09:42,5839.75,09:55,5851.00,5839.25,5877.25,WIN,2.23,Spring pulito con FVG M5 a 5851 e retest OTE 0.705
+2026-10-15,USTEC,SHORT,06:30,09:30,20450.00,20320.00,09:35,20485.50,09:50,20435.00,20488.00,20315.00,WIN,2.38,UTAD sui massimi pre-market e rigetto immediato
+2026-10-16,DE40,LONG,07:00,09:00,19520.00,19440.00,09:15,19422.00,09:30,19455.00,19419.50,19524.00,BE,1.00,Preso TP1 a 19524 (+2 tick) poi chiuso a break-even sul runner

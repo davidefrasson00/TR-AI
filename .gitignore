@@ -46,6 +46,11 @@ data/cache/
 *.csv
 *.parquet
 !data/sample/
+!data/calibration/*.csv
+
+# Backtest reports
+reports/*.png
+!reports/.gitkeep
 
 # Modelli addestrati (troppo grandi per git)
 models/saved/
