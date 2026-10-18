@@ -24,11 +24,11 @@ class SessionWindow:
     end_time: time
 
     def contains(self, t: time) -> bool:
-        """Check if time t falls within [start_time, end_time]."""
+        """Check if time t falls within [start_time, end_time)."""
         if self.start_time <= self.end_time:
-            return self.start_time <= t <= self.end_time
+            return self.start_time <= t < self.end_time
         # Overnight window (e.g. Asian session across midnight)
-        return t >= self.start_time or t <= self.end_time
+        return t >= self.start_time or t < self.end_time
 
 
 @dataclass

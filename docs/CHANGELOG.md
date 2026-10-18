@@ -9,14 +9,18 @@ Il formato è basato su [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ## [Unreleased]
 
 ### Added
-- **Fase S1**: Implementazione delle primitive quantitative per la strategia WAM-FVG in `src/strategies/wam_fvg/primitives/`:
-  - `sessions.py`: Gestione orari con timezone-aware (`zoneinfo`), finestre operative e test specifico sul disallineamento dell'ora legale (DST) USA/Europa.
-  - `range.py`: Validatore accumulazione con **Kaufman Efficiency Ratio (ER)** per garantire lateralità ($ER \le 0.35$), bounds di altezza su $ATR_{14}$ e concentrazione barre interne.
-  - `sweep.py`: Rilevatore manipolazione (Spring / UTAD) con calcolo profondità in frazione del range ($0.03 \le \text{Depth} \le 0.50$) e filtro sulle chiusure consecutive esterne.
-  - `displacement.py`: Validatore rientro impulsivo e Market Structure Shift (MSS) con ratio corpo/ATR $\ge 1.0$, chiusura nel 30% estremo e rottura dello swing pivot locale.
-  - `fvg.py`: Rilevatore Fair Value Gap (a 3 candele senza look-ahead), calcolo Consequent Encroachment (CE al 50%) e tracciamento del ciclo di vita (`INTACT`, `TOUCHED`, `CE_HIT`, `FILLED`, `INVERTED`).
-  - `fibonacci.py`: Livelli di ritracciamento e calcolo zona OTE (0.62 - 0.79) con intersezione geometrica di confluenza con gli FVG.
-  - `indicators.py`: ATR, Anchored VWAP con bande di deviazione standard $\pm 1\sigma, \pm 2\sigma$ su tick volume e Volume Profile con POC e Value Area al 70%.
-- Template CSV per esempi storici di calibrazione: `data/calibration/wam_fvg_examples_template.csv`.
-- Suite completa di 24 test unitari su dati sintetici (`tests/strategies/wam_fvg/`) tutti con esito positivo (100% pass).
-- File di configurazione `pytest.ini`.
+- **Fase S2**: Completamento dell'integrazione plug-in della strategia WAM-FVG e del Risk Manager:
+  - `src/core/events.py`: Modelli di dominio tipizzati (`Bar`, `Signal`, `Order`, `Position`, `AccountInfo`).
+  - `src/core/logger.py`: Logger strutturato `DecisionLogger` per tracciare ogni decisione, soglia e motivazione.
+  - `src/risk/manager.py`: Gateway centrale di Risk Management non bypassabile:
+    - Position sizing dinamico sulla distanza dello Stop Loss ($Size = \frac{\text{Rischio Monetario}}{\text{StopDist} \times \text{PointValue}}$).
+    - Limite max 1.0% rischio per trade (€10.00 su €1.000).
+    - Circuit breaker al 3.0% di drawdown massimo giornaliero con arresto nuove operazioni.
+    - Limite max 3 posizioni aperte contemporaneamente.
+    - Bucket di correlazione `us_indices` (US500 e USTEC non possono avere 2 posizioni parallele).
+    - Rifiuto categorico di ordini sprovvisti di Stop Loss o con $R:R < 2.0$.
+  - `src/strategies/base.py`: Protocollo formale `BaseStrategy`.
+  - `src/strategies/wam_fvg/fsm.py`: Macchina a stati finita deterministica (`IDLE`, `RANGE_BUILDING`, `RANGE_VALID`, `SWEEP_DETECTED`, `DISPLACEMENT_CONFIRMED`, `AWAIT_RETEST`, `ORDER_PENDING`, `IN_TRADE`, `MANAGED`, `CLOSED`) con stati di fallimento (`NO_RANGE`, `SWEEP_INVALID`, `SETUP_EXPIRED`, `SETUP_INVALIDATED`, `MISSED`).
+  - `src/strategies/wam_fvg/scoring.py`: Motore di scoring 0-100 basato sulla rubrica a 6 componenti con soglia di qualificazione a 60/100.
+  - `src/strategies/wam_fvg/strategy.py`: Plug-in `WamFvgStrategy` completo, ingestione candele incrementale a barra chiusa senza look-ahead bias, calcolo stop loss con buffer protettivo e spread ask per posizioni short.
+  - Nuove suite di test: `test_risk_manager.py`, `test_fsm.py`, `test_scoring.py`, `test_strategy_integration.py` (36 test complessivi, 100% passati).
