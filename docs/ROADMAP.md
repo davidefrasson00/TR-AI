@@ -8,14 +8,12 @@ Documento di tracciamento delle milestone di progetto.
 
 | Fase | Descrizione | Stato | Note |
 | :--- | :--- | :---: | :--- |
-| **FASE 0** | Analisi dei requisiti, chiarimento vincoli e analisi rischi |  Completata | Identificato vincolo MT5 macOS/Windows, capitale 1000€, Indici CFD |
-| **FASE 1** | Progettazione architetturale di sistema |  In Revisione | Creato documento architetturale completo e interfacce astratte |
-| **FASE 2** | Roadmap dettagliata con criteri di accettazione | ⏳ Da avviare | Definizione sprint e deliverable testabili |
-| **FASE 3** | Implementazione Core & Config & Storage (SQLite) | ⏹️ Pianificata | Pydantic settings, SQLAlchemy models, EventBus |
-| **FASE 4** | Data Layer & Paper Broker Engine | ⏹️ Pianificata | YFinance provider, motore simulazione lotti/spread su indici |
-| **FASE 5** | Risk Management Engine | ⏹️ Pianificata | Vincolo 2% trade, 5% max drawdown, max 3 trade |
-| **FASE 6** | Strategy Engine & Integrazione Strategia Utente | ⏹️ Pianificata | Multi-timeframe H1 + M15 su S&P500, NASDAQ, DAX |
-| **FASE 7** | Web Dashboard Glassmorphism (FastAPI + WS) | ⏹️ Pianificata | Interfaccia moderna con TradingView Lightweight Charts |
-| **FASE 8** | Telegram Bot & Controllo Remoto | ⏹️ Pianificata | Comandi /status, /killswitch e approvazione ordini |
-| **FASE 9** | Data Provider News / Macro & Investing.com | ⏹️ Pianificata | Calendario economico e filtri pre-market |
-| **FASE 10** | Connettore MT5 reale (VPS Windows) | ⏹️ Pianificata | Attivabile quando richiesto dall'utente |
+| **FASE 0** | Analisi requisiti, chiarimento vincoli e analisi rischi |  Completata | Identificato vincolo MT5 macOS/Windows, capitale 1000€, Indici CFD |
+| **FASE 1** | Progettazione architetturale di sistema |  Completata | Creato documento architetturale completo, diagrammi e interfacce |
+| **S0** | Formalizzazione Strategia WAM-FVG |  Completata | Redatto `STRATEGY_SPEC.md` e scheletro YAML |
+| **S1** | Primitive WAM-FVG con Test Unitari |  Completata | Sessioni/DST, Kaufman ER Range, Sweep, MSS, FVG, Fib OTE, VWAP, Volume Profile (24/24 test passati) |
+| **S2** | Macchina a Stati & Plug-in Strategy | ⏳ In attesa | FSM deterministica a candela chiusa integrata con Risk Manager |
+| **S3** | Backtest & Report con Grafici | ⏹️ Pianificata | Simulatore slippage/spread, metriche R, grafici setup |
+| **S4** | Calibrazione con Esempi Storici | ⏹️ Pianificata | Benchmark contro esempi reali dell'utente (template CSV pronto) |
+| **S5** | Paper Trading + Web Dashboard + Telegram | ⏹️ Pianificata | Monitoraggio live glassmorphism e approvazione ordini via bot |
+| **S6** | Robustezza & Ablation Testing | ⏹️ Pianificata | Walk-forward, sensitivity analysis dei tick buffer |
