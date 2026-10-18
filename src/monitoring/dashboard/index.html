@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TR-AI | Glassmorphism Trading Terminal</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- TradingView Lightweight Charts -->
+  <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+</head>
+<body>
+
+  <!-- Ambient Glow Backgrounds -->
+  <div class="ambient-glow glow-cyan"></div>
+  <div class="ambient-glow glow-magenta"></div>
+
+  <!-- Header / Nav -->
+  <header class="glass-header">
+    <div class="header-left">
+      <div class="logo-badge">
+        <span class="logo-icon">🤖</span>
+        <div class="logo-text">
+          <h1>TR-AI <span class="version-tag">v1.0-sim</span></h1>
+          <p class="subtitle">Autonomous Intraday Quant Engine</p>
+        </div>
+      </div>
+      <div class="status-pill active" id="strategyStatusBadge">
+        <span class="status-dot"></span>
+        <span id="statusLabel">ACTIVE • PAPER TRADING</span>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="risk-indicator">
+        <span class="indicator-label">Daily Drawdown</span>
+        <div class="progress-bar-container">
+          <div class="progress-bar" id="drawdownBar" style="width: 12%;"></div>
+        </div>
+        <span class="indicator-value" id="drawdownValue">0.00% / 3.00%</span>
+      </div>
+
+      <button class="btn-kill-switch" id="killSwitchBtn" onclick="openKillSwitchModal()">
+        <span class="kill-icon">⚡</span> KILL SWITCH
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="dashboard-grid">
+
+    <!-- KPI Metric Cards Row -->
+    <section class="kpi-row">
+      <div class="glass-card kpi-card">
+        <div class="kpi-header">
+          <span>PORTFOLIO EQUITY</span>
+          <span class="kpi-icon">💶</span>
+        </div>
+        <div class="kpi-value" id="kpiEquity">€ 1,007.40</div>
+        <div class="kpi-sub positive" id="kpiEquityChange">+0.74% (€ +7.40)</div>
+      </div>
+
+      <div class="glass-card kpi-card">
+        <div class="kpi-header">
+          <span>ACCOUNT BALANCE</span>
+          <span class="kpi-icon">🏦</span>
+        </div>
+        <div class="kpi-value" id="kpiBalance">€ 1,000.00</div>
+        <div class="kpi-sub neutral">Capitale Base Demo: € 1.000</div>
+      </div>
+
+      <div class="glass-card kpi-card">
+        <div class="kpi-header">
+          <span>OPEN TRADES / RISK</span>
+          <span class="kpi-icon">🛡️</span>
+        </div>
+        <div class="kpi-value" id="kpiPositionsCount">1 / 3</div>
+        <div class="kpi-sub warning" id="kpiBucketInfo">Bucket us_indices: 1 attivo</div>
+      </div>
+
+      <div class="glass-card kpi-card">
+        <div class="kpi-header">
+          <span>WIN RATE & EXPECTANCY</span>
+          <span class="kpi-icon">📈</span>
+        </div>
+        <div class="kpi-value" id="kpiWinRate">66.7%</div>
+        <div class="kpi-sub positive" id="kpiExpectancy">+1.85 R per Trade</div>
+      </div>
+    </section>
+
+    <!-- Main Chart & Strategy Section -->
+    <section class="chart-section">
+      <div class="glass-card chart-card">
+        <div class="chart-header">
+          <div class="symbol-selector">
+            <button class="tab-btn active" onclick="switchSymbol('US500')">S&P 500 (US500)</button>
+            <button class="tab-btn" onclick="switchSymbol('USTEC')">Nasdaq 100 (USTEC)</button>
+            <button class="tab-btn" onclick="switchSymbol('DE40')">DAX 40 (DE40)</button>
+          </div>
+          <div class="timeframe-badges">
+            <span class="badge active">M5 (Trigger)</span>
+            <span class="badge">M15 (Range)</span>
+            <span class="badge">H1 (HTF)</span>
+          </div>
+        </div>
+
+        <!-- TradingView Chart Container -->
+        <div id="tradingviewChart" class="chart-canvas"></div>
+      </div>
+    </section>
+
+    <!-- Lower Two-Column Section: Positions & Strategy Log -->
+    <section class="bottom-grid">
+      
+      <!-- Open Positions & Closed Trades -->
+      <div class="glass-card table-card">
+        <div class="card-tabs">
+          <button class="card-tab active" onclick="switchTableTab('positions')">Posizioni Aperte (Live)</button>
+          <button class="card-tab" onclick="switchTableTab('trades')">Storico Trade & Metriche</button>
+        </div>
+
+        <!-- Active Positions Table -->
+        <div id="positionsTabContent" class="tab-content active">
+          <div class="table-container">
+            <table class="glass-table">
+              <thead>
+                <tr>
+                  <th>Strumento</th>
+                  <th>Tipo</th>
+                  <th>Size</th>
+                  <th>Entry</th>
+                  <th>Prezzo Attuale</th>
+                  <th>Stop Loss</th>
+                  <th>Take Profit</th>
+                  <th>P&L Flottante</th>
+                  <th>Stato</th>
+                </tr>
+              </thead>
+              <tbody id="positionsTableBody">
+                <!-- Dynamically populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Closed Trades Table -->
+        <div id="tradesTabContent" class="tab-content">
+          <div class="table-container">
+            <table class="glass-table">
+              <thead>
+                <tr>
+                  <th>Strumento</th>
+                  <th>Direzione</th>
+                  <th>Entry</th>
+                  <th>Exit</th>
+                  <th>P&L Monetario</th>
+                  <th>R-Multiplo</th>
+                  <th>Motivo Uscita</th>
+                  <th>Orario</th>
+                </tr>
+              </thead>
+              <tbody id="tradesTableBody">
+                <!-- Dynamically populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Strategy State Machine & Decision Log -->
+      <div class="glass-card terminal-card">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <span class="terminal-title">LIVE DECISION ENGINE LOGS</span>
+        </div>
+        <div class="terminal-body" id="decisionLogsContainer">
+          <!-- Live stream of logs -->
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Kill Switch Confirmation Modal -->
+  <div class="modal-backdrop" id="killSwitchModal">
+    <div class="glass-card modal-card">
+      <div class="modal-icon">🚨</div>
+      <h2>Conferma Attivazione Kill-Switch</h2>
+      <p>L'attivazione del <strong>Kill-Switch</strong> interromperà immediatamente ogni scansione della strategia e bloccherà qualsiasi nuovo ordine al broker simulato.</p>
+      
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeKillSwitchModal()">Annulla</button>
+        <button class="btn-confirm-kill" onclick="confirmKillSwitch()">CONFERMA ARRESTO</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

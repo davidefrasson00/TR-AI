@@ -1,0 +1,108 @@
+{
+  "timestamp": "2026-10-18T15:31:37.773077Z",
+  "initial_capital": 1000.0,
+  "total_trades": 3,
+  "winning_trades": 2,
+  "losing_trades": 1,
+  "breakeven_trades": 0,
+  "win_rate_pct": 66.67,
+  "profit_factor": 3.47,
+  "expectancy_r": 2.0,
+  "average_r": 2.0,
+  "net_pnl": 24.1,
+  "max_drawdown_monetary": 9.76,
+  "max_drawdown_pct": 0.98,
+  "max_consecutive_losses": 1,
+  "instrument_breakdown": {
+    "US500": {
+      "trades": 2.0,
+      "win_rate": 100.0,
+      "pnl": 33.85599999999904,
+      "avg_r": 3.4975206611568206
+    },
+    "USTEC": {
+      "trades": 1.0,
+      "win_rate": 0.0,
+      "pnl": -9.759999999999856,
+      "avg_r": -1.0010256410256262
+    }
+  },
+  "direction_breakdown": {
+    "LONG": {
+      "trades": 3.0,
+      "win_rate": 66.66666666666666,
+      "pnl": 24.095999999999187,
+      "avg_r": 1.9980052270960051
+    },
+    "SHORT": {
+      "trades": 0,
+      "win_rate": 0.0,
+      "pnl": 0.0,
+      "avg_r": 0.0
+    }
+  },
+  "score_tier_breakdown": {
+    "60-70": {
+      "trades": 0,
+      "win_rate": 0.0,
+      "pnl": 0.0,
+      "avg_r": 0.0
+    },
+    "70-80": {
+      "trades": 0,
+      "win_rate": 0.0,
+      "pnl": 0.0,
+      "avg_r": 0.0
+    },
+    "80+": {
+      "trades": 0,
+      "win_rate": 0.0,
+      "pnl": 0.0,
+      "avg_r": 0.0
+    }
+  },
+  "trades": [
+    {
+      "trade_id": "pos_c189fc8a",
+      "symbol": "USTEC",
+      "direction": "LONG",
+      "entry_time": "2026-10-15T13:40:00+00:00",
+      "exit_time": "2026-10-15T13:45:00+00:00",
+      "entry_price": 29731.55,
+      "exit_price": 29682.75,
+      "pnl_monetary": -9.76,
+      "r_multiple": -1.0,
+      "exit_reason": "SL",
+      "day_of_week": "Thursday",
+      "entry_hour": 13
+    },
+    {
+      "trade_id": "pos_3cabd916_tp1",
+      "symbol": "US500",
+      "direction": "LONG",
+      "entry_time": "2026-10-15T13:45:00+00:00",
+      "exit_time": "2026-10-15T13:45:00+00:00",
+      "entry_price": 7732.150000000001,
+      "exit_price": 7755.95,
+      "pnl_monetary": 19.04,
+      "r_multiple": 3.93,
+      "exit_reason": "TP1 (50% partial)",
+      "day_of_week": "Thursday",
+      "entry_hour": 13
+    },
+    {
+      "trade_id": "pos_3cabd916",
+      "symbol": "US500",
+      "direction": "LONG",
+      "entry_time": "2026-10-15T13:45:00+00:00",
+      "exit_time": "2026-10-15T13:45:00+00:00",
+      "entry_price": 7732.150000000001,
+      "exit_price": 7750.67,
+      "pnl_monetary": 14.82,
+      "r_multiple": 3.06,
+      "exit_reason": "TP2 (Runner)",
+      "day_of_week": "Thursday",
+      "entry_hour": 13
+    }
+  ]
+}

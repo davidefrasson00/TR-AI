@@ -81,6 +81,8 @@ class WamFvgStrategy(BaseStrategy):
             "USTEC": 1.0,
             "DE40": 1.2,
         }
+        self.last_session_date: Dict[str, date] = {}
+        self.current_atr: Dict[str, float] = {}
 
     def _get_fsm(self, symbol: str) -> WAMStateMachine:
         if symbol not in self.state_machines:
@@ -94,6 +96,8 @@ class WamFvgStrategy(BaseStrategy):
             fsm.reset_for_new_session()
         self.bars_history.clear()
         self.range_bars_history.clear()
+        self.last_session_date.clear()
+        self.current_atr.clear()
 
     def on_bar(self, bar: Bar, context: Optional[Dict] = None) -> Optional[Signal]:
         """
@@ -105,17 +109,32 @@ class WamFvgStrategy(BaseStrategy):
         tick_size = self.tick_sizes.get(symbol, 0.1)
         spread = self.typical_spreads.get(symbol, 0.5)
 
+        # Daily Session Rollover: Reset state machine when a new trading day begins
+        session_date = sess_mgr.get_session_date(bar.timestamp)
+        if symbol not in self.last_session_date:
+            self.last_session_date[symbol] = session_date
+        elif session_date > self.last_session_date[symbol]:
+            fsm.reset_for_new_session()
+            self.range_bars_history[symbol] = []
+            self.last_session_date[symbol] = session_date
+
+        # Update O(1) Rolling True Range and ATR
+        prev_close = self.bars_history[symbol][-1].close if (symbol in self.bars_history and self.bars_history[symbol]) else bar.open
+        tr = max(bar.high - bar.low, abs(bar.high - prev_close), abs(bar.low - prev_close))
+        alpha = 1.0 / 14.0
+        if symbol not in self.current_atr:
+            self.current_atr[symbol] = tr
+        else:
+            self.current_atr[symbol] = (alpha * tr) + ((1.0 - alpha) * self.current_atr[symbol])
+
+        # Scale 5m ATR to M15 equivalent (~sqrt(3) = 1.73)
+        atr = self.current_atr[symbol] * (1.732 if bar.timeframe == "5m" else 1.0)
+        atr = max(atr, 5.0)
+
         # Accumulate bar history
         if symbol not in self.bars_history:
             self.bars_history[symbol] = []
         self.bars_history[symbol].append(bar)
-
-        # Estimate ATR from recent bars
-        atr = 15.0
-        if len(self.bars_history[symbol]) >= 14:
-            df = pd.DataFrame([{"high": b.high, "low": b.low, "close": b.close} for b in self.bars_history[symbol][-50:]])
-            atr_series = calculate_atr(df['high'], df['low'], df['close'], period=14)
-            atr = float(atr_series.iloc[-1]) if not pd.isna(atr_series.iloc[-1]) else 15.0
 
         current_state = fsm.current_state
 
