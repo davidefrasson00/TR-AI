@@ -97,7 +97,7 @@ def setup_telegram(token: str = None, chat_id: str = None):
 
     # 4. Send test message
     test_msg = (
-        f"🎉 <b>TR-AI <-> Telegram Collegato con Successo!</b>\n\n"
+        f"🎉 <b>TR-AI &lt;-&gt; Telegram Collegato con Successo!</b>\n\n"
         f"<b>Bot:</b> @{bot_user}\n"
         f"<b>Chat ID Autorizzato:</b> <code>{chat_id}</code>\n"
         f"<b>Modalità Operativa:</b> PAPER TRADING / DEMO\n"
