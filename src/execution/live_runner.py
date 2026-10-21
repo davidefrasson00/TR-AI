@@ -29,7 +29,6 @@ from src.data.yfinance_provider import YFinanceProvider
 from src.risk.manager import RiskManager
 from src.strategies.wam_fvg.strategy import WamFvgStrategy
 from src.bot.telegram_bot import TelegramBot
-from src.monitoring.api import live_state
 
 UTC = ZoneInfo("UTC")
 
@@ -44,6 +43,7 @@ class LivePaperRunner:
         self,
         strategy: WamFvgStrategy,
         risk_manager: RiskManager,
+        live_state: Optional[Dict] = None,
         telegram_bot: Optional[TelegramBot] = None,
         symbols: Optional[List[str]] = None,
         poll_interval_seconds: int = 15,
@@ -52,6 +52,12 @@ class LivePaperRunner:
     ):
         self.strategy = strategy
         self.risk_manager = risk_manager
+        self.live_state = live_state if live_state is not None else {
+            "account": AccountInfo(currency="EUR", balance=1000.0, equity=1000.0, daily_starting_equity=1000.0),
+            "open_positions": [],
+            "kill_switch_active": False,
+            "strategy_mode": "PAPER TRADING / LIVE DEMO"
+        }
         self.telegram_bot = telegram_bot
         self.symbols = symbols or ["US500", "USTEC", "DE40"]
         self.poll_interval = poll_interval_seconds
@@ -84,7 +90,7 @@ class LivePaperRunner:
     async def step(self) -> None:
         """Single polling evaluation iteration across all instruments."""
         # 1. Kill Switch Check
-        if live_state.get("kill_switch_active", False):
+        if self.live_state.get("kill_switch_active", False):
             return
 
         now_utc = datetime.now(UTC)
@@ -92,10 +98,10 @@ class LivePaperRunner:
 
         if not is_open:
             # Market currently closed (weekend or maintenance)
-            live_state["strategy_mode"] = "PAPER TRADING (MARKET CLOSED • WAITING FOR OPEN)"
+            self.live_state["strategy_mode"] = "PAPER TRADING (MARKET CLOSED • WAITING FOR OPEN)"
             return
         else:
-            live_state["strategy_mode"] = "PAPER TRADING / LIVE DEMO"
+            self.live_state["strategy_mode"] = "PAPER TRADING / LIVE DEMO"
 
         # 2. Fetch latest candles for each symbol
         for symbol in self.symbols:
@@ -128,8 +134,8 @@ class LivePaperRunner:
         signal = self.strategy.on_bar(bar)
         if signal:
             # Evaluate with RiskManager
-            account = live_state["account"]
-            current_positions = live_state["open_positions"]
+            account = self.live_state["account"]
+            current_positions = self.live_state["open_positions"]
             risk_decision = self.risk_manager.evaluate_signal(
                 signal=signal,
                 account=account,
@@ -201,7 +207,7 @@ class LivePaperRunner:
                     unrealized_pnl=0.0,
                     opened_at=bar.timestamp
                 )
-                live_state["open_positions"].append(pos)
+                self.live_state["open_positions"].append(pos)
                 decision_logger.log_decision(
                     "LIVE_PAPER", bar.symbol, "FILLED",
                     f"Filled {pos.size_contracts} at {fill_price:.2f}"
@@ -216,7 +222,7 @@ class LivePaperRunner:
     async def _check_open_positions(self, bar: Bar) -> None:
         """Updates trailing excursions and executes SL / TP1 / TP2."""
         remaining = []
-        for pos in live_state["open_positions"]:
+        for pos in self.live_state["open_positions"]:
             if pos.symbol != bar.symbol:
                 remaining.append(pos)
                 continue
@@ -252,7 +258,7 @@ class LivePaperRunner:
                 pos.is_partially_closed = True
                 pos.is_at_breakeven = True
 
-                acc: AccountInfo = live_state["account"]
+                acc: AccountInfo = self.live_state["account"]
                 acc.balance += pnl_monetary
                 acc.equity += pnl_monetary
                 acc.daily_realized_pnl += pnl_monetary
@@ -272,7 +278,7 @@ class LivePaperRunner:
 
             remaining.append(pos)
 
-        live_state["open_positions"] = remaining
+        self.live_state["open_positions"] = remaining
 
     async def _close_trade(self, pos: Position, exit_price: float, reason: str) -> None:
         """Closes a position and records realized P&L."""
@@ -282,7 +288,7 @@ class LivePaperRunner:
         initial_risk = pos.risk_amount_monetary * (0.5 if pos.is_partially_closed else 1.0)
         r_mult = round(pnl_monetary / initial_risk, 2) if initial_risk > 0 else 0.0
 
-        acc: AccountInfo = live_state["account"]
+        acc: AccountInfo = self.live_state["account"]
         acc.balance += pnl_monetary
         acc.equity += pnl_monetary
         acc.daily_realized_pnl += pnl_monetary

@@ -56,7 +56,7 @@ async def test_live_runner_pending_order_fill_and_tp1_breakeven(clean_live_state
     strategy = WamFvgStrategy(strategy_id="wam_fvg")
     rm = RiskManager()
     bot = TelegramBot(token="")
-    runner = LivePaperRunner(strategy=strategy, risk_manager=rm, telegram_bot=bot)
+    runner = LivePaperRunner(strategy=strategy, risk_manager=rm, live_state=clean_live_state, telegram_bot=bot)
 
     # Place a pending BUY limit order at 5800.0 (SL 5780, TP1 5830)
     order = Order(
@@ -124,7 +124,7 @@ async def test_live_runner_sl_exit(clean_live_state):
     strategy = WamFvgStrategy(strategy_id="wam_fvg")
     rm = RiskManager()
     bot = TelegramBot(token="")
-    runner = LivePaperRunner(strategy=strategy, risk_manager=rm, telegram_bot=bot)
+    runner = LivePaperRunner(strategy=strategy, risk_manager=rm, live_state=clean_live_state, telegram_bot=bot)
 
     # Directly add active position
     pos = Position(

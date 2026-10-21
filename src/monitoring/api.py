@@ -22,6 +22,8 @@ from src.core.logger import decision_logger
 from src.data.yfinance_provider import CACHE_DIR
 from src.risk.manager import RiskManager
 from src.bot.telegram_bot import TelegramBot
+from src.strategies.wam_fvg.strategy import WamFvgStrategy
+from src.execution.live_runner import LivePaperRunner
 
 REPORTS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "reports")
 DASHBOARD_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dashboard")
@@ -63,11 +65,31 @@ live_state: Dict[str, Any] = {
 # Telegram Bot instance linked with system state
 telegram_bot = TelegramBot(live_state=live_state)
 
+# Strategy, Risk Manager and Live Paper Runner instances
+live_strategy = WamFvgStrategy(buffer_ticks=2, tp1_offset_ticks=2, min_score=75.0)
+live_risk_manager = RiskManager(
+    max_risk_per_trade_pct=1.0,
+    max_daily_drawdown_pct=3.0,
+    max_open_positions=3,
+    one_position_per_bucket=True
+)
+live_paper_runner = LivePaperRunner(
+    strategy=live_strategy,
+    risk_manager=live_risk_manager,
+    live_state=live_state,
+    telegram_bot=telegram_bot,
+    symbols=["US500", "USTEC", "DE40"],
+    poll_interval_seconds=20
+)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     telegram_bot.start()
+    runner_task = asyncio.create_task(live_paper_runner.run_forever())
     yield
+    live_paper_runner.stop()
+    runner_task.cancel()
     telegram_bot.stop()
 
 
